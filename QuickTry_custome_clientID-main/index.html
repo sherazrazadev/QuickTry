@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DeepAR in a Friendly Iframe</title>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body style="height: 100vh; overflow: hidden; margin: 0; padding: 1rem">
+    <h1>DeepAR Glasses Try-On</h1>
+
+    <div id="buttons-container"></div>
+
+    <iframe
+      id="friendly-iframe"
+      width="95%"
+      height="85%"
+      style="padding: 1rem; border: 1px solid black"
+    ></iframe>
+
+    <script>
+      // Function to get query parameters from the URL
+      function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+      }
+
+      // Define the mapping of available glasses for each client
+      const clientGlassesMap = {
+        "1": [1, 2, 3, 4, 5, 6], // Client 1: First 6 glasses
+        "2": [6, 7, 8, 9, 10],   // Client 2: 6th to 10th glasses
+        "3": [11, 12]             // Client 3: 11th and 12th glasses
+      };
+
+      const clientId = getQueryParam("client"); // Get client ID from URL query
+      console.log("Client ID:", clientId); // Log to verify correct client ID
+
+      // Check if the client ID is valid
+      if (!clientId || !clientGlassesMap[clientId]) {
+        alert("Invalid or missing client ID. Please contact support.");
+        throw new Error("Invalid client ID");
+      }
+
+      // Generate buttons for the available glasses based on the client ID
+      const glassesIds = clientGlassesMap[clientId];
+      const buttonsContainer = document.getElementById("buttons-container");
+
+      glassesIds.forEach((id) => {
+        const button = document.createElement("button");
+        button.innerText = `Glasses ${id}`;
+        button.onclick = () => loadGlasses(id);
+        buttonsContainer.appendChild(button);
+      });
+
+      // Function to load glasses in the iframe
+      function loadGlasses(id) {
+        const iframe = document.getElementById("friendly-iframe");
+        iframe.src = `./deepar.html?id=${id}`; // Pass ID to deepar.html
+        console.log(`Loaded Glasses ID: ${id}`); // Log the action
+      }
+    </script>
+  </body>
+</html>
